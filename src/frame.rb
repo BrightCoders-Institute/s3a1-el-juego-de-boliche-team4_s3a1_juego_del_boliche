@@ -10,25 +10,24 @@ class Frame
   attr_accessor :rolls, :frame, :turn
 
   def initialize
-    @rolls = [0, 0]
+    @rolls = [0, 0, 0]
     @frame = 0
     @turn = 0
   end
 
   def next_frame
-    @turn = 0
-    @frame += 1
+    @frame += 1 if @turn == 1 && @frame < 10
+    next_turn
   end
 
   def next_turn
-    @turn += 1
-    if @turn == 10
-      @rolls << 0
+    if @frame == 10
+      @turn = @turn.zero? ? 1 : 2
     end
-    @turn
+    @turn = @turn.zero? ? 1 : 0
   end
 
-  def roll(pins)
+  def play_roll(pins)
     @rolls[@turn] = pins
   end
 
