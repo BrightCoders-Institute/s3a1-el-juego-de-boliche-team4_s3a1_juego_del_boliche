@@ -1,32 +1,36 @@
 # frozen_string_literal: false
-require 'matrix'
+require_relative 'frame'
 
 # Score class
+class Score < Frame
+  attr_accessor :matrix
 
-class Score
-  attr_accessor :Matrix
+  def initialize
+    super()
+    @matrix = Array.new(9) { Array.new(3, 0) }
+    @matrix.push(Array.new(4, 0))
+  end
 
-  def initialize(obj_frame)
-    @obj_frame = obj_frame
-    @index = obj_frame.frame
-    @matrix = Matrix.build(11, 3) { 0 }
+  def finish_rolls
+    @matrix[frame][0] = rolls[0]
+    @matrix[frame][1] = rolls[1]
   end
 
   def calculate_score
-    @matrix[@index][2] = @matrix[@index][0] + @matrix[@index][1]
+    @matrix[frame][2] = @matrix[frame][0] + @matrix[frame][1]
   end
 
   def calculate_score_spare
-    @matrix[@index - 1][2] = (@matrix[@index - 1][0] + @matrix[@index - 1][1]) + @matrix[@index][0]
+    @matrix[frame - 1][2] = (@matrix[frame - 1][0] + @matrix[frame - 1][1]) + @matrix[frame][0]
   end
 
   def calculate_score_strike(option = FALSE)
     if option == TRUE # double strike
-      additional = @matrix[@index - 1][0] + @matrix[@index][0]
-      @matrix[@index - 2][2] = @matrix[@index - 2][0] + @matrix[@index - 2][1] + additional
+      additional = @matrix[frame - 1][0] + @matrix[frame][0]
+      @matrix[frame - 2][2] = @matrix[frame - 2][0] + @matrix[frame - 2][1] + additional
     else
-      additional = @matrix[@index][0] + @matrix[@index][1]
-      @matrix[@index - 1][2] = @matrix[@index - 1][0] + @matrix[@index - 1][1] + additional
+      additional = @matrix[frame][0] + @matrix[frame][1]
+      @matrix[frame - 1][2] = @matrix[frame - 1][0] + @matrix[frame - 1][1] + additional
     end
   end
 end
