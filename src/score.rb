@@ -1,19 +1,32 @@
 # frozen_string_literal: false
-class Score
-  attr_accessor :score, :frame, :lastframe
+require 'matrix'
 
-  # Constructor needs the rolls array from Frame class
-  # new Puntuacion(@rolls)
-  def initialize(frame)
-    @frame = frame
-    @score = 0
+# Score class
+
+class Score
+  attr_accessor :Matrix
+
+  def initialize(obj_frame)
+    @obj_frame = obj_frame
+    @index = obj_frame.frame
+    @matrix = Matrix.build(11, 3) { 0 }
   end
 
   def calculate_score
-    if @frame.is_strike_or_spare
-      @lastframe = @frame.rolls
+    @matrix[@index][2] = @matrix[@index][0] + @matrix[@index][1]
+  end
+
+  def calculate_score_spare
+    @matrix[@index - 1][2] = (@matrix[@index - 1][0] + @matrix[@index - 1][1]) + @matrix[@index][0]
+  end
+
+  def calculate_score_strike(option = FALSE)
+    if option == TRUE # double strike
+      additional = @matrix[@index - 1][0] + @matrix[@index][0]
+      @matrix[@index - 2][2] = @matrix[@index - 2][0] + @matrix[@index - 2][1] + additional
     else
-      @score = @frame.rolls.sum
+      additional = @matrix[@index][0] + @matrix[@index][1]
+      @matrix[@index - 1][2] = @matrix[@index - 1][0] + @matrix[@index - 1][1] + additional
     end
   end
 end

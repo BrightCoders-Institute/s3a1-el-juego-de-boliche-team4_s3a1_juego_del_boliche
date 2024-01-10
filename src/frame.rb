@@ -1,4 +1,11 @@
 # frozen_string_literal: false
+
+# Frame class
+# This class is used to store the rolls of a frame
+# and to check if the frame is a strike or spare
+# @rolls: rolls of the frame
+# @frame: current frame
+# @turn: current rolls of the frame
 class Frame
   attr_accessor :rolls, :frame, :turn
 
@@ -9,6 +16,7 @@ class Frame
   end
 
   def next_frame
+    @turn = 0
     @frame += 1
   end
 
@@ -29,16 +37,6 @@ class Frame
       return @rolls[@turn] == 10
     else
       return @rolls[@turn - 1] + @rolls[@turn] == 10
-    end
-  end  
-
-  def print_frame
-    if is_strike
-      '■'
-    elsif is_spare
-      "#{@rolls[0]}└#{@rolls[1]}"
-    else
-      @rolls.join(' ')
     end
   end
 end
