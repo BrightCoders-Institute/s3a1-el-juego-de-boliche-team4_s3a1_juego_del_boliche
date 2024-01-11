@@ -16,26 +16,39 @@ class Frame
   end
 
   def next_frame
-    @frame += 1 if @turn == 1 && @frame < 10
-    next_turn
+    @rolls = [0, 0, 0]
+    @frame += 1 if @frame < 10
+  end
+
+  def next_turn_last_frame
+    @turn = if strike? || spare?
+              @turn.zero? ? 1 : 2
+            else
+              @turn.zero? ? 1 : 0
+            end
   end
 
   def next_turn
-    if @frame == 10
-      @turn = @turn.zero? ? 1 : 2
+    if @frame == 9
+      next_turn_last_frame
+    else
+      @turn = if strike?
+                0
+              else
+                @turn.zero? ? 1 : 0
+              end
     end
-    @turn = @turn.zero? ? 1 : 0
   end
 
   def play_roll(pins)
     @rolls[@turn] = pins
   end
 
-  def is_strike_or_spare
-    if @turn == 0
-      return @rolls[@turn] == 10
-    else
-      return @rolls[@turn - 1] + @rolls[@turn] == 10
-    end
+  def strike?
+    @rolls[@turn] == 10
+  end
+
+  def spare?
+    @rolls[0] + @rolls[1] == 10
   end
 end
